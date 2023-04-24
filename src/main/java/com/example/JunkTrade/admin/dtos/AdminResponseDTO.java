@@ -19,9 +19,9 @@ public class AdminResponseDTO {
     private Time time;
 
     private String address;
-    private String imagePath;
 
-    public AdminResponseDTO(Long id, String fname, String lname, String email, String phoneNumber, int price, Date pickupDate, Time time, String address, String imagePath) {
+
+    public AdminResponseDTO(Long id, String fname, String lname, String email, String phoneNumber, int price, Date pickupDate, Time time, String address) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
@@ -30,7 +30,6 @@ public class AdminResponseDTO {
         this.pickupDate = pickupDate;
         this.time = time;
         this.address = address;
-        this.imagePath = imagePath;
         this.id=id;
     }
     public AdminResponseDTO(){}

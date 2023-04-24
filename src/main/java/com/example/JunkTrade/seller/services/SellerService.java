@@ -3,6 +3,7 @@ package com.example.JunkTrade.seller.services;
 import com.example.JunkTrade.Repository.ScrapItemListingRepo;
 import com.example.JunkTrade.Repository.ScrapListingRepo;
 import com.example.JunkTrade.Repository.SellerRepo;
+import com.example.JunkTrade.admin.dtos.AdminItemResponseDTO;
 import com.example.JunkTrade.jwt.JwtService;
 import com.example.JunkTrade.models.ScrapItemListings;
 import com.example.JunkTrade.models.ScrapListings;
@@ -75,7 +76,7 @@ public class SellerService {
         scrapListings.setAddressLine(orderRequestDTO.getAddressLine());
         scrapListings.setState(orderRequestDTO.getState());
         scrapListings.setPinCode(orderRequestDTO.getPinCode());
-        scrapListings.setImagePath("kk");
+       // scrapListings.setImagePath("kk");
         List<ScrapItemListings> scrapItemListings = new ArrayList<>();
         for(ScrapItemListDTO i:orderRequestDTO.getScrapItemListDTOS()){
             ScrapItemListings s=new ScrapItemListings();
@@ -95,7 +96,43 @@ public class SellerService {
         return scrapObject.getId();
     }
 
-    public String uploadScrapRecord(MultipartFile request, Long scrapId) throws IOException {
+    public List<MyOrdersDTO> myOrders(Seller seller) {
+        List<ScrapListings> scrapListings = scrapListingRepo.findAllBySeller(seller);
+        List<MyOrdersDTO> res=new ArrayList<>();
+        for(ScrapListings i:scrapListings){
+            MyOrdersDTO m=new MyOrdersDTO();
+            m.setId(i.getId());
+            m.setTime(i.getPickupTime());
+            m.setPrice(i.getPrice());
+            m.setPickupDate(i.getPickupDate());
+            m.setCategory(i.getScrapCategory());
+            res.add(m);
+        }
+        return res;
+    }
+
+    public List<SellerItemResponseDTO> getScrapItemList(Long scrapId) {
+
+        List<ScrapItemListings> scrapItemListings = scrapItemListingRepo.findByScrap_listing(scrapId);
+        List<SellerItemResponseDTO> sellerItemResponseDTOList=new ArrayList<>();
+        for(ScrapItemListings i:scrapItemListings){
+            SellerItemResponseDTO sellerItemResponseDTO=new SellerItemResponseDTO();
+            sellerItemResponseDTO.setItem(i.getItem());
+            sellerItemResponseDTO.setQuantity(i.getQuantity());
+            sellerItemResponseDTO.setRate(i.getRate());
+            sellerItemResponseDTOList.add(sellerItemResponseDTO);
+        }
+        return sellerItemResponseDTOList;
+
+
+    }
+
+    public String deleteScrapFromList(Long scrapId) {
+        scrapListingRepo.deleteById(scrapId);
+        return "records deleted successfully";
+    }
+
+/*    public String uploadScrapRecord(MultipartFile request, Long scrapId) throws IOException {
         String filename = request.getOriginalFilename().substring(0, request.getOriginalFilename().length()-4);
         filename = filename + RandomString.make(30) + ".png";
         System.out.println(filename);
@@ -114,6 +151,6 @@ public class SellerService {
             throw new RuntimeException("File not uploaded");
         }
         return "File uploaded successfully";
-    }
+    }*/
 }
 

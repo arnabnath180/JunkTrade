@@ -58,11 +58,6 @@ public class AdminService {
     }
 
     public String deleteScrapFromList(Long scrapId) {
-        String imagePath = scrapListingRepo.findById(scrapId).get().getImagePath();
-        File file = new File(imagePath);
-        if(!file.delete()) {
-            throw new RuntimeException("File not deleted");
-        }
         scrapListingRepo.deleteById(scrapId);
         return "records deleted successfully";
     }
@@ -81,7 +76,6 @@ public class AdminService {
             String address=listings.getAddressLine()+","+listings.getDistrict()+","+listings.getPinCode();
             adminResponseDTO.setAddress(address);
             adminResponseDTO.setPrice(listings.getPrice());
-            adminResponseDTO.setImagePath(listings.getImagePath());
             adminResponseDTO.setPickupDate(listings.getPickupDate());
             adminResponseDTO.setTime(listings.getPickupTime());
             adminResponseDTOS.add(adminResponseDTO);

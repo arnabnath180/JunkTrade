@@ -45,8 +45,10 @@ public class ScrapListings {
     @Column(nullable = false)
     private String pinCode;
 
+/*
     @Column(nullable = true)
     private String imagePath;
+*/
 
     //TODO: Forign key pointig to doctor table
     @ManyToOne
