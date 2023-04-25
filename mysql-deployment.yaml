@@ -7,7 +7,8 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels: mysql
+    matchLabels:
+      app: mysql
   template:
     metadata:
       labels:
@@ -20,6 +21,29 @@ spec:
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value:
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-root-password
         - name: MYSQL_DATABASE
-          value:
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: dbName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+
+
+
